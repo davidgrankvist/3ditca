@@ -7,9 +7,14 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// light source
+const spotLight = new THREE.SpotLight(0xffffff);
+spotLight.position.set(200, 400, 300);
+scene.add(spotLight);
+
 // create cube
 const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const material = new THREE.MeshLambertMaterial({ color: 0x00bbaa , emissive: 0x0000aa });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 // zoom out to see cube
