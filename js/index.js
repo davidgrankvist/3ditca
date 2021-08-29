@@ -1,4 +1,4 @@
-import { THREE } from "./three.js";
+import { THREE, OrbitControls } from "./three.js";
 import CaState from "./CaState.js";
 import CaGraphics from "./CaGraphics.js";
 import { init3dArr } from "./arrayUtils.js";
@@ -18,7 +18,7 @@ spotLight.position.set(200, 400, 300);
 scene.add(spotLight);
 
 // init cell states and transition
-const dim = 100;
+const dim = 50;
 const randomize = () => Math.random() > 0.5 ? BinaryCell.OFF : BinaryCell.ON;
 const randomGrid = init3dArr({x: dim, y: dim, z: dim}, randomize);
 const mn = 26;
@@ -33,10 +33,12 @@ const caGraphics = new CaGraphics(caState);
 caGraphics.update();
 scene.add(caGraphics.getMesh());
 
-// zoom out to see graphics
-const cameraDistance = dim * 2;
+// init camera
+const orbitControls = new OrbitControls(camera, renderer.domElement);
+const cameraDistance = dim;
 camera.position.set(cameraDistance, cameraDistance, cameraDistance);
 camera.lookAt(0, 0, 0);
+orbitControls.update();
 
 renderer.render(scene, camera);
 
@@ -45,6 +47,7 @@ const animate = () => {
     requestAnimationFrame(animate);
     caState.update();
     caGraphics.update();
+    orbitControls.update();
     renderer.render(scene, camera);
 };
 animate();

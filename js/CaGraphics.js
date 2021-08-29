@@ -13,6 +13,8 @@ export default class CaGraphics {
     #matrixHide;
     #matrixShow;
 
+    #dimsHalf; // to center grid around origin
+
     constructor(state) {
         this.#state = state;
 
@@ -34,6 +36,12 @@ export default class CaGraphics {
             0, 0, 0, 0,
             0, 0, 0, 0
         );
+
+        this.#dimsHalf = {
+            x: Math.round(dims.x / 2),
+            y: Math.round(dims.y / 2),
+            z: Math.round(dims.z / 2)
+        };
     }
 
     getMesh() {
@@ -46,7 +54,11 @@ export default class CaGraphics {
                 this.#mesh.setMatrixAt(i, this.#matrixHide);
                 break;
             case BinaryCell.ON:
-                this.#matrixShow.setPosition(x, y, z);
+                this.#matrixShow.setPosition(
+                    x - this.#dimsHalf.x,
+                    y - this.#dimsHalf.y,
+                    z - this.#dimsHalf.z
+                );
                 this.#mesh.setMatrixAt(i, this.#matrixShow);
                 break;
             default:
