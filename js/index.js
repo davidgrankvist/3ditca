@@ -43,10 +43,15 @@ orbitControls.update();
 renderer.render(scene, camera);
 
 // render loop
+let hasConverged = false;
 const animate = () => {
     requestAnimationFrame(animate);
-    caState.update();
-    caGraphics.update();
+    if(!hasConverged && caState.update()) {
+        caGraphics.update();
+    } else if (!hasConverged) {
+        console.log("The CA has converged. Skipping furher updates of state and graphics.");
+        hasConverged = true;
+    }
     orbitControls.update();
     renderer.render(scene, camera);
 };

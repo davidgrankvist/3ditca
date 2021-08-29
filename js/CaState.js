@@ -3,7 +3,7 @@ import { init3dArr }from "./arrayUtils.js";
 export default class CaState {
     #grid; // cell states 3D vector
     #transition; // (x, y, z, this) => next cell state
-    #dimensions // convenience object for grid dimensions
+    #dimensions; // convenience object for grid dimensions
 
     constructor(grid, transition) {
         this.#grid = grid;
@@ -18,14 +18,19 @@ export default class CaState {
     update() {
         const dims = this.getDimensions();
         const nextGrid = init3dArr(dims);
+        let hasChanged = false;
         for (let x = 0; x < dims.x; x++) {
             for (let y = 0; y < dims.y; y++) {
                 for (let z = 0; z < dims.z; z++) {
                     nextGrid[x][y][z] = this.#transition(x, y, z, this);
+                    if (nextGrid[x][y][z] !== this.getState(x, y, z)) {
+                        hasChanged = true;
+                    }
                 }
             }
         }
         this.#grid = nextGrid;
+        return hasChanged;
     }
 
     getState(x, y, z) {
