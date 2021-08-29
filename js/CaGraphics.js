@@ -1,7 +1,5 @@
 import { THREE } from "./three.js";
-
-const HIDDEN = 0;
-const SHOWN = 1;
+import { BinaryCell } from "./cellConstants.js";
 
 export default class CaGraphics {
     #state; // CaState
@@ -44,10 +42,10 @@ export default class CaGraphics {
 
     #updateCell(x, y, z, i) {
         switch (this.#state.getState(x, y, z)) {
-            case HIDDEN:
+            case BinaryCell.OFF:
                 this.#mesh.setMatrixAt(i, this.#matrixHide);
                 break;
-            case SHOWN:
+            case BinaryCell.ON:
                 this.#matrixShow.setPosition(x, y, z);
                 this.#mesh.setMatrixAt(i, this.#matrixShow);
                 break;

@@ -3,6 +3,7 @@ import CaState from "./CaState.js";
 import CaGraphics from "./CaGraphics.js";
 import { init3dArr } from "./arrayUtils.js";
 import { ggolTransition } from "./transitions.js";
+import { BinaryCell } from "./cellConstants.js";
 
 // init
 const scene = new THREE.Scene();
@@ -18,7 +19,7 @@ scene.add(spotLight);
 
 // init cell states and transition
 const dim = 100;
-const randomize = () => Math.random() > 0.5 ? 0 : 1;
+const randomize = () => Math.random() > 0.5 ? BinaryCell.OFF : BinaryCell.ON;
 const randomGrid = init3dArr({x: dim, y: dim, z: dim}, randomize);
 const mn = 26;
 const surviveLimits = { min: mn * 0.1, max: mn * 0.375 };

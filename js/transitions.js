@@ -1,3 +1,5 @@
+import { BinaryCell } from "./cellConstants.js";
+
 // all surrounding positions in a 3x3x3 grid
 export const getMooreNeighborhood = (x, y, z, dims) => {
     const neighborhood = [];
@@ -32,8 +34,8 @@ export const getMooreNeighborhood = (x, y, z, dims) => {
  */
 export const ggolTransition = (x, y, z, state, surviveLimits, reviveLimits) => {
     const count = getMooreNeighborhood(x, y, z, state.getDimensions())
-        .reduce((c, n) => state.getState(n.x, n.y, n.z) === 1 ? c + 1 : c, 0);
+        .reduce((c, n) => state.getState(n.x, n.y, n.z) === BinaryCell.ON ? c + 1 : c, 0);
     const ownState = state.getState(x, y, z);
-    const lims = ownState === 1 ? surviveLimits : reviveLimits;
-    return count >= lims.min && count <= lims.max ? 1 : 0;
+    const lims = ownState === BinaryCell.ON ? surviveLimits : reviveLimits;
+    return count >= lims.min && count <= lims.max ? BinaryCell.ON : BinaryCell.OFF;
 };
