@@ -50,7 +50,6 @@ export default class CaGraphics {
                 this.#mesh.setMatrixAt(i, this.#matrixShow);
                 break;
             default:
-                console.warn("Unsupported cell state ", this.#state.getState(x, y, z));
         }
     }
 
