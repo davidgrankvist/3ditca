@@ -19,17 +19,33 @@ const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshLambertMaterial({ color: 0x00bbaa , emissive: 0x0000aa });
 const cubes = new THREE.InstancedMesh(geometry, material, numCubes);
 const matrix = new THREE.Matrix4();
+// can't set visibility of instances, so cubes are hidden by collapsing into a point
+const matrixHide = new THREE.Matrix4();
+matrixHide.set(0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+);
+const hideCube = (x, y, z, i) => {
+    cubes.setMatrixAt(i, matrix);
+};
 
-let i = 0;
-for (let x = 0; x < dim; x++) {
-    for (let y = 0; y < dim; y++) {
-        for (let z = 0; z < dim; z++) {
-            matrix.setPosition(x, y, z);
-            cubes.setMatrixAt(i, matrix);
-            i++;
+const updateCubes = cb => {
+    let i = 0;
+    for (let x = 0; x < dim; x++) {
+        for (let y = 0; y < dim; y++) {
+            for (let z = 0; z < dim; z++) {
+                cb?.(x, y, z, i);
+                i++;
+            }
         }
     }
-}
+};
+updateCubes((x, y, z, i) => {
+    matrix.setPosition(x, y, z);
+    cubes.setMatrixAt(i, matrix);
+});
+
 scene.add(cubes);
 
 // zoom out to see graphics
@@ -39,6 +55,17 @@ camera.lookAt(0, 0, 0);
 // render loop
 const animate = () => {
     requestAnimationFrame(animate);
+
+    updateCubes((x, y, z, i) => {
+        if (Math.random() > 0.5) {
+            hideCube(x, y, z, i);
+        } else{
+            matrix.setPosition(x, y, z);
+            cubes.setMatrixAt(i, matrix);
+        }
+    });
+    cubes.instanceMatrix.needsUpdate = true;
+
     renderer.render(scene, camera);
 };
 animate();
