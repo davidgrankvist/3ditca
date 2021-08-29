@@ -1,7 +1,8 @@
 import { THREE } from "./three.js";
 import CaState from "./CaState.js";
 import CaGraphics from "./CaGraphics.js";
-import { init3dArr }from "./arrayUtils.js";
+import { init3dArr } from "./arrayUtils.js";
+import { ggolTransition } from "./transitions.js";
 
 // init
 const scene = new THREE.Scene();
@@ -19,8 +20,12 @@ scene.add(spotLight);
 const dim = 100;
 const randomize = () => Math.random() > 0.5 ? 0 : 1;
 const randomGrid = init3dArr({x: dim, y: dim, z: dim}, randomize);
-const randomTransition = (x, y, z, state) => randomize();
-const caState = new CaState(randomGrid, randomTransition);
+const mn = 26;
+const surviveLimits = { min: mn * 0.1, max: mn * 0.375 };
+const reviveLimits = { min: mn * 0.375, max: mn * 0.375 };
+const transition = (x, y, z, state) =>
+    ggolTransition(x, y, z, state, surviveLimits, reviveLimits);
+const caState = new CaState(randomGrid, transition);
 
 // init cell graphics
 const caGraphics = new CaGraphics(caState);
