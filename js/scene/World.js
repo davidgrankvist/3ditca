@@ -30,16 +30,18 @@ export default class World {
         this.#spotLight.position.set(200, 400, 300);
         this.#scene.add(this.#spotLight);
 
+        // CA
         this.#caGraphics = new CaGraphics(this.#caState);
         this.#caGraphics.update();
         this.#scene.add(this.#caGraphics.getMesh());
 
+        // camera
         this.#orbitControls = new OrbitControls(this.#camera, this.#renderer.domElement);
         const dims = this.#caState.getDimensions();
         this.#camera.position.set(dims.x, dims.y, dims.z);
-        // camera.lookAt(0, 0, 0);
         this.#orbitControls.update();
 
+        // initial render
         this.#renderer.render(this.#scene, this.#camera);
     }
 
@@ -47,6 +49,7 @@ export default class World {
         if(!this.#hasConverged && this.#caState.update()) {
             this.#caGraphics.update();
         } else if (!this.#hasConverged) {
+            // assumes a deterministic transition function
             console.log("The CA has converged. Skipping furher updates of state and graphics.");
             this.#hasConverged = true;
         }
