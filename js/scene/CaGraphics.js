@@ -1,5 +1,5 @@
-import { THREE } from "./three.js";
-import { BinaryCell } from "./model/cellConstants.js";
+import { THREE } from "../three.js";
+import { BinaryCell } from "../model/cellConstants.js";
 
 export default class CaGraphics {
     #state; // CaState

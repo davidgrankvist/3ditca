@@ -1,4 +1,4 @@
-import { THREE, OrbitControls } from "./three.js";
+import { THREE, OrbitControls } from "../three.js";
 import CaGraphics from "./CaGraphics.js";
 
 export default class World {

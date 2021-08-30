@@ -2,8 +2,8 @@ import CaState from "./model/CaState.js";
 import { ggolTransition } from "./model/transitions.js";
 import { BinaryCell } from "./model/cellConstants.js";
 import { init3dArr } from "./arrayUtils.js";
-import World from "./World.js";
-import RenderLoop from "./RenderLoop.js";
+import World from "./scene/World.js";
+import RenderLoop from "./scene/RenderLoop.js";
 
 // init cell states and transition
 const dim = 50;
