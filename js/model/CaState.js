@@ -1,4 +1,4 @@
-import { init3dArr }from "./arrayUtils.js";
+import { init3dArr }from "../arrayUtils.js";
 
 export default class CaState {
     #grid; // cell states 3D vector

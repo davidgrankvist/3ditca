@@ -1,9 +1,9 @@
 import { THREE, OrbitControls } from "./three.js";
-import CaState from "./CaState.js";
+import CaState from "./model/CaState.js";
+import { ggolTransition } from "./model/transitions.js";
+import { BinaryCell } from "./model/cellConstants.js";
 import CaGraphics from "./CaGraphics.js";
 import { init3dArr } from "./arrayUtils.js";
-import { ggolTransition } from "./transitions.js";
-import { BinaryCell } from "./cellConstants.js";
 
 // init
 const scene = new THREE.Scene();
