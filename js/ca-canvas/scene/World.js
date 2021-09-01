@@ -10,17 +10,13 @@ export default class World {
     #orbitControls;
     #spotLight;
 
-    #caState;
     #caGraphics;
 
-    #hasConverged = false;
-
-    constructor(caState, container) {
-        this.#caState = caState;
+    constructor(container) {
         this.#container = container;
     }
 
-    init() {
+    init(dims) {
         const width = parseInt(this.#container.getAttribute("width"));
         const height = parseInt(this.#container.getAttribute("height"));
         // essentials
@@ -36,13 +32,11 @@ export default class World {
         this.#scene.add(this.#spotLight);
 
         // CA
-        this.#caGraphics = new CaGraphics(this.#caState);
-        this.#caGraphics.update();
+        this.#caGraphics = new CaGraphics(dims);
         this.#scene.add(this.#caGraphics.getMesh());
 
         // camera
         this.#orbitControls = new OrbitControls(this.#camera, this.#renderer.domElement);
-        const dims = this.#caState.getDimensions();
         this.#camera.position.set(dims.x, dims.y, dims.z);
         this.#orbitControls.update();
 
@@ -50,14 +44,9 @@ export default class World {
         this.#renderer.render(this.#scene, this.#camera);
     }
 
-    update() {
-        if(!this.#hasConverged && this.#caState.update()) {
-            this.#caGraphics.update();
-        } else if (!this.#hasConverged) {
-            // assumes a deterministic transition function
-            console.log("The CA has converged. Skipping furher updates of state and graphics.");
-            this.#hasConverged = true;
-        }
+    // subscription
+    update(caState) {
+        this.#caGraphics.update(caState);
     }
 
     render() {
