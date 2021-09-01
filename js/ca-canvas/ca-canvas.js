@@ -8,9 +8,9 @@ import { BinaryCell } from "./model/cellConstants.js";
 class CaCanvas extends HTMLElement {
     #container;
 
-	static get observedAttributes() {
-		return ["width", "height"];
-	}
+    static get observedAttributes() {
+        return ["width", "height"];
+    }
 
     constructor() {
         super();
@@ -18,10 +18,10 @@ class CaCanvas extends HTMLElement {
         this.#container = document.createElement("div");
         shadow.appendChild(this.#container);
 
-		this.addEventListener("ca-init", this.onInit);
+        this.addEventListener("ca-init", this.onInit);
     }
 
-	attributeChangedCallback(name, _, newValue) {
+    attributeChangedCallback(name, _, newValue) {
         this.#container.setAttribute(name, newValue);
     }
 
