@@ -17,13 +17,15 @@ class CaCanvas extends HTMLElement {
         const shadow = this.attachShadow({mode: "closed"});
         this.#container = document.createElement("div");
         shadow.appendChild(this.#container);
+
+		this.addEventListener("ca-init", this.onInit);
     }
 
 	attributeChangedCallback(name, _, newValue) {
         this.#container.setAttribute(name, newValue);
     }
 
-    connectedCallback() {
+    onInit() {
         // init cell states and transition
         const dim = 50;
         const randomize = () => Math.random() > 0.5 ? BinaryCell.OFF : BinaryCell.ON;
