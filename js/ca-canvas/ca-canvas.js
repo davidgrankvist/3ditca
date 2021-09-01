@@ -6,11 +6,21 @@ import { init3dArr } from "./arrayUtils.js";
 import { BinaryCell } from "./model/cellConstants.js";
 
 class CaCanvas extends HTMLElement {
-    #shadow;
+    #container;
+
+	static get observedAttributes() {
+		return ["width", "height"];
+	}
 
     constructor() {
         super();
-        this.#shadow = this.attachShadow({mode: "closed"});
+        const shadow = this.attachShadow({mode: "closed"});
+        this.#container = document.createElement("div");
+        shadow.appendChild(this.#container);
+    }
+
+	attributeChangedCallback(name, _, newValue) {
+        this.#container.setAttribute(name, newValue);
     }
 
     connectedCallback() {
@@ -26,7 +36,7 @@ class CaCanvas extends HTMLElement {
         const caState = new CaState(randomGrid, transition);
 
         // create graphics and start rendering
-        const world = new World(caState, this.#shadow);
+        const world = new World(caState, this.#container);
         world.init();
         const loop = new RenderLoop(world);
         loop.start()
