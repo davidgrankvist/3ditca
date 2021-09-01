@@ -2,6 +2,8 @@ import { THREE, OrbitControls } from "../three.js";
 import CaGraphics from "./CaGraphics.js";
 
 export default class World {
+    #container;
+
     #scene;
     #camera;
     #renderer;
@@ -13,8 +15,9 @@ export default class World {
 
     #hasConverged = false;
 
-    constructor(caState) {
+    constructor(caState, container) {
         this.#caState = caState;
+        this.#container = container;
     }
 
     init() {
@@ -23,7 +26,7 @@ export default class World {
         this.#camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.#renderer = new THREE.WebGLRenderer();
         this.#renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(this.#renderer.domElement);
+        this.#container.appendChild(this.#renderer.domElement);
 
         // light source
         this.#spotLight = new THREE.SpotLight(0xffffff);
