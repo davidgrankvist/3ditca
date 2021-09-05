@@ -11,6 +11,8 @@ export default class CaController {
     #publisher;
     #loop;
 
+    #play = true;
+
     init(container) {
         // init model
         const dim = 50;
@@ -37,9 +39,19 @@ export default class CaController {
 
         // render
         this.#loop = new RenderLoop(() => {
-            this.#publisher.update();
+            if (this.#play) {
+                this.#publisher.update();
+            }
             this.#world.render();
         });
         this.#loop.start()
+    }
+
+    play() {
+        this.#play = true;
+    }
+
+    pause() {
+        this.#play = false;
     }
 }
