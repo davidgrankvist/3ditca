@@ -59,4 +59,8 @@ export default class World {
         this.#orbitControls.update();
         this.#renderer.render(this.#scene, this.#camera);
     }
+
+    setCameraPosition(x, y, z) {
+        this.#camera.position.set(x, y, z);
+    }
 }
