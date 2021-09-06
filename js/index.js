@@ -3,6 +3,9 @@ import "./ca-canvas/ca-canvas.js";
 const caCanvas = document.createElement("ca-canvas");
 caCanvas.setAttribute("width", window.innerWidth);
 caCanvas.setAttribute("height", window.innerHeight);
+caCanvas.setAttribute("max-x", 50);
+caCanvas.setAttribute("max-y", 50);
+caCanvas.setAttribute("max-z", 50);
 document.body.appendChild(caCanvas);
 
 const mn = 26;
@@ -30,4 +33,4 @@ const config = {
         }
     }
 };
-caCanvas.dispatchEvent(new CustomEvent("ca-init", { detail: config }));
+caCanvas.dispatchEvent(new CustomEvent("ca-config", { detail: config }));

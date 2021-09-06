@@ -10,21 +10,15 @@ export default class CaController {
 
     #play = true;
 
-    init(container, config) {
+    init(container) {
         // init graphics
         this.#world = new World(container);
-        this.#world.init(config.dims);
-
-        const caState = initCa(config);
-
-        // subcribe to model
-        this.#publisher = new Publisher(caState);
-        this.#publisher.addSubscriber(this.#world);
+        this.#world.init();
 
         // render
         this.#loop = new RenderLoop(() => {
             if (this.#play) {
-                this.#publisher.update();
+                this.#publisher?.update();
             }
             this.#world.render();
         });

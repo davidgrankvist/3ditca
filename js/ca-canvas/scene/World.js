@@ -16,9 +16,15 @@ export default class World {
         this.#container = container;
     }
 
-    init(dims) {
+    init() {
         const width = parseInt(this.#container.getAttribute("width"));
         const height = parseInt(this.#container.getAttribute("height"));
+        const maxDims = {
+            x: parseInt(this.#container.getAttribute("max-x")),
+            y: parseInt(this.#container.getAttribute("max-y")),
+            z: parseInt(this.#container.getAttribute("max-z"))
+        };
+
         // essentials
         this.#scene = new THREE.Scene();
         this.#camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
@@ -32,12 +38,12 @@ export default class World {
         this.#scene.add(this.#spotLight);
 
         // CA
-        this.#caGraphics = new CaGraphics(dims);
+        this.#caGraphics = new CaGraphics(maxDims);
         this.#scene.add(this.#caGraphics.getMesh());
 
         // camera
         this.#orbitControls = new OrbitControls(this.#camera, this.#renderer.domElement);
-        this.#camera.position.set(dims.x, dims.y, dims.z);
+        this.#camera.position.set(maxDims.x, maxDims.y, maxDims.z);
         this.#orbitControls.update();
 
         // initial render

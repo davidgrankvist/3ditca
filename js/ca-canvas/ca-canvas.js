@@ -5,7 +5,7 @@ class CaCanvas extends HTMLElement {
     #controller;
 
     static get observedAttributes() {
-        return ["width", "height"];
+        return ["width", "height", "max-x", "max-y", "max-z"];
     }
 
     constructor() {
@@ -15,7 +15,6 @@ class CaCanvas extends HTMLElement {
         shadow.appendChild(this.#container);
 
         this.#controller = new CaController();
-        this.addEventListener("ca-init", (e) => this.#controller.init(this.#container, e.detail));
         this.addEventListener("ca-play", () => this.#controller.play());
         this.addEventListener("ca-pause", () => this.#controller.pause());
         this.addEventListener("ca-config", (e) => this.#controller.configure(e.detail));
@@ -23,6 +22,10 @@ class CaCanvas extends HTMLElement {
 
     attributeChangedCallback(name, _, newValue) {
         this.#container.setAttribute(name, newValue);
+    }
+
+    connectedCallback() {
+        this.#controller.init(this.#container);
     }
 }
 customElements.define("ca-canvas", CaCanvas);
