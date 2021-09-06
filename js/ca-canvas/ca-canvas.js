@@ -15,9 +15,10 @@ class CaCanvas extends HTMLElement {
         shadow.appendChild(this.#container);
 
         this.#controller = new CaController();
-        this.addEventListener("ca-init", () => this.#controller.init(this.#container));
+        this.addEventListener("ca-init", (e) => this.#controller.init(this.#container, e.detail));
         this.addEventListener("ca-play", () => this.#controller.play());
         this.addEventListener("ca-pause", () => this.#controller.pause());
+        this.addEventListener("ca-config", (e) => this.#controller.configure(e.detail));
     }
 
     attributeChangedCallback(name, _, newValue) {

@@ -5,5 +5,29 @@ caCanvas.setAttribute("width", window.innerWidth);
 caCanvas.setAttribute("height", window.innerHeight);
 document.body.appendChild(caCanvas);
 
-const test = new CustomEvent("ca-init");
-caCanvas.dispatchEvent(test);
+const mn = 26;
+const config = {
+    dims: {
+        x: 50,
+        y: 50,
+        z: 50
+    },
+    initCell: {
+        type: "random",
+        args: { r: 0.5 }
+    },
+    transition: {
+        type: "ggol",
+        args: {
+            surviveLimits: {
+                min: mn * 0.1,
+                max: mn * 0.375
+            },
+            reviveLimits: {
+                min: mn * 0.375,
+                max: mn * 0.375,
+            }
+        }
+    }
+};
+caCanvas.dispatchEvent(new CustomEvent("ca-init", { detail: config }));
