@@ -15,11 +15,20 @@ export default class World {
 
     constructor(container) {
         this.#container = container;
+        const resizeObserver = new ResizeObserver(entries => {
+            const bbSize = entries[0].borderBoxSize[0];
+            const width = bbSize.inlineSize;
+            const height = bbSize.blockSize;
+            this.resize(width, height);
+        });
+        resizeObserver.observe(this.#container);
     }
 
     init() {
-        const width = parseInt(this.#container.getAttribute("width"));
-        const height = parseInt(this.#container.getAttribute("height"));
+        const style = getComputedStyle(this.#container);
+        const width = parseInt(style.width);
+        const height = parseInt(style.height);
+
         const maxDims = {
             x: parseInt(this.#container.getAttribute("max-x")),
             y: parseInt(this.#container.getAttribute("max-y")),
@@ -63,5 +72,14 @@ export default class World {
 
     setCameraPosition(x, y, z) {
         this.#camera.position.set(x, y, z);
+    }
+
+    resize(width, height) {
+        if(!this.#renderer) {
+            return;
+        }
+        this.#camera.aspect = width / height;
+        this.#camera.updateProjectionMatrix();
+        this.#renderer.setSize(width, height);
     }
 }

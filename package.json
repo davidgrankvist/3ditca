@@ -8,9 +8,11 @@
     "build": "parcel build src/index.html"
   },
   "devDependencies": {
+    "@parcel/transformer-sass": "2.0.0-rc.0",
     "parcel": "2.0.0-rc.0"
   },
   "dependencies": {
+    "bulma": "0.9.3",
     "three": "0.132.2"
   }
 }

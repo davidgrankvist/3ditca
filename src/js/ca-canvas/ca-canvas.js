@@ -5,13 +5,17 @@ class CaCanvas extends HTMLElement {
     #controller;
 
     static get observedAttributes() {
-        return ["width", "height", "max-x", "max-y", "max-z"];
+        return ["max-x", "max-y", "max-z"];
     }
 
     constructor() {
         super();
         const shadow = this.attachShadow({mode: "closed"});
         this.#container = document.createElement("div");
+        this.#container.style = `
+            height: 100%;
+            width: 100%;
+        `;
         shadow.appendChild(this.#container);
 
         this.#controller = new CaController();
