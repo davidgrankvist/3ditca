@@ -1,4 +1,5 @@
-import { THREE, OrbitControls } from "../three.js";
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import CaGraphics from "./CaGraphics.js";
 
 export default class World {

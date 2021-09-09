@@ -1,0 +1,16 @@
+{
+  "name": "3ditca",
+  "version": "1.0.0",
+  "description": "3D cellular automata editor and visualizer",
+  "private": true,
+  "scripts": {
+    "watch": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "devDependencies": {
+    "parcel": "2.0.0-rc.0"
+  },
+  "dependencies": {
+    "three": "0.132.2"
+  }
+}
