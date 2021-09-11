@@ -1,3 +1,5 @@
+import "./ca-param-form.js";
+
 class CaTools extends HTMLElement {
     constructor() {
         super();
@@ -10,7 +12,7 @@ class CaTools extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <div class="box">
-                I am tools
+                <ca-param-form></ca-param-form>
             </div>
         `;
         this.style = `
