@@ -1,17 +1,11 @@
 import "./ca-canvas/ca-canvas.js";
-
-const headerHeight = getComputedStyle(document.querySelector("header")).height;
-const main = document.createElement("main");
-main.style = `
-    width: 100vv;
-    height: calc(100vh - ${headerHeight});
-`;
-document.body.appendChild(main);
+import "./ca-header/ca-header.js";
 
 const caCanvas = document.createElement("ca-canvas");
 caCanvas.setAttribute("max-x", 50);
 caCanvas.setAttribute("max-y", 50);
 caCanvas.setAttribute("max-z", 50);
+const main = document.querySelector("main");
 main.appendChild(caCanvas);
 
 const mn = 26;
