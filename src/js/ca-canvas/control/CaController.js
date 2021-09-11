@@ -8,7 +8,7 @@ export default class CaController {
     #publisher;
     #loop;
 
-    #play = true;
+    #play = false;
 
     init(container) {
         // init graphics

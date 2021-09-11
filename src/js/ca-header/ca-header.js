@@ -8,8 +8,7 @@ class CaHeader extends HTMLElement {
             <nav class="navbar" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
                     <a id="nav-tools" class="navbar-item">Tools</a>
-                    <a class="navbar-item">Second</a>
-                    <a class="navbar-item">Third</a>
+                    <a id="nav-play" class="navbar-item">Play</a>
                 </div>
             </nav>
         `;
@@ -21,6 +20,18 @@ class CaHeader extends HTMLElement {
             const tools = document.querySelector("ca-tools");
             const visible = tools.getAttribute("visible");
             tools.setAttribute("visible", visible === "true" ? "false" : "true");
+        });
+
+        const playBtn = document.getElementById("nav-play");
+        playBtn.addEventListener("click", () => {
+            const canvas = document.querySelector("ca-canvas");
+            if (playBtn.innerText === "Play") {
+                playBtn.innerText = "Pause";
+                canvas.dispatchEvent(new CustomEvent("ca-play"));
+            } else {
+                playBtn.innerText = "Play ";
+                canvas.dispatchEvent(new CustomEvent("ca-pause"));
+            }
         });
     }
 }
