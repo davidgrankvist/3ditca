@@ -7,7 +7,7 @@ class CaHeader extends HTMLElement {
         this.innerHTML = `
             <nav class="navbar" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
-                    <a class="navbar-item">First</a>
+                    <a id="nav-tools" class="navbar-item">Tools</a>
                     <a class="navbar-item">Second</a>
                     <a class="navbar-item">Third</a>
                 </div>
@@ -17,6 +17,11 @@ class CaHeader extends HTMLElement {
             width: 100%;
             height: 100%;
         `;
+        document.getElementById("nav-tools").addEventListener("click", () => {
+            const tools = document.querySelector("ca-tools");
+            const visible = tools.getAttribute("visible");
+            tools.setAttribute("visible", visible === "true" ? "false" : "true");
+        });
     }
 }
 customElements.define("ca-header", CaHeader);
