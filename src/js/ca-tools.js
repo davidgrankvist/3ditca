@@ -1,10 +1,4 @@
-import "./ca-param-form.js";
-
 class CaTools extends HTMLElement {
-    constructor() {
-        super();
-    }
-
     static get observedAttributes() {
         return ["visible"];
     }
