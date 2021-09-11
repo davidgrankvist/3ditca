@@ -14,9 +14,10 @@ class CaTools extends HTMLElement {
             right: 50%;
             top: 50%;
             transform: translate(50%, -50%);
-            visibility: hidden;
-            opacity: 0;
+            visibility: visible;
+            opacity: 1;
         `;
+        this.addEventListener("submit", () => this.setAttribute("visible", false));
     }
 
     attributeChangedCallback(name, _, newValue) {
