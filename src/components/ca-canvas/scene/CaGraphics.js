@@ -4,13 +4,7 @@ import { BinaryCell } from "../model/cellConstants.js";
 export default class CaGraphics {
     #mesh; // combined mesh of all cells
 
-    /*
-     * InstancedMesh does not expose the visibility
-     * of instances. To work around this, instances are
-     * hidden by collapsing them into a point.
-     */
-    #matrixHide;
-    #matrixShow;
+    #cellTransform;
 
     #maxDims;
     #dims;
@@ -27,15 +21,7 @@ export default class CaGraphics {
         const numCubes = this.#maxDims.x * this.#maxDims.y * this.#maxDims.z;
         this.#mesh = new THREE.InstancedMesh(geometry, material, numCubes);
 
-        // cell transforms
-        this.#matrixShow = new THREE.Matrix4();
-        this.#matrixHide = new THREE.Matrix4();
-        this.#matrixHide.set(
-            0, 0, 0, 0,
-            0, 0, 0, 0,
-            0, 0, 0, 0,
-            0, 0, 0, 0
-        );
+        this.#cellTransform = new THREE.Matrix4();
     }
 
     getMesh() {
@@ -44,16 +30,13 @@ export default class CaGraphics {
 
     #updateCell(x, y, z, i, prevCellState) {
         switch (prevCellState) {
-            case BinaryCell.OFF:
-                this.#mesh.setMatrixAt(i, this.#matrixHide);
-                break;
             case BinaryCell.ON:
-                this.#matrixShow.setPosition(
+                this.#cellTransform.setPosition(
                     x - Math.round(this.#dims.x / 2),
                     y - Math.round(this.#dims.y / 2),
                     z - Math.round(this.#dims.z / 2)
                 );
-                this.#mesh.setMatrixAt(i, this.#matrixShow);
+                this.#mesh.setMatrixAt(i, this.#cellTransform);
                 break;
             default:
         }
@@ -77,8 +60,11 @@ export default class CaGraphics {
             for (let y = 0; y < dims.y; y++) {
                 for (let z = 0; z < dims.z; z++) {
                     const nextCellState = caState.getState(x, y, z);
-                    this.#updateCell(x, y, z, i, nextCellState);
-                    i++;
+                    // only need instances for visible cells
+                    if (nextCellState !== BinaryCell.OFF) {
+                        this.#updateCell(x, y, z, i, nextCellState);
+                        i++;
+                    }
                 }
             }
         }
