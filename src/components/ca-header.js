@@ -8,7 +8,7 @@ class CaHeader extends HTMLElement {
 
     connectedCallback() {
         this.innerHTML = `
-            <nav class="navbar" role="navigation" aria-label="main navigation">
+            <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
                     <div class="navbar-item">
                         <a id="nav-tools" class="button>
@@ -26,10 +26,6 @@ class CaHeader extends HTMLElement {
                     </div>
                 </div>
             </nav>
-        `;
-        this.style = `
-            width: 100%;
-            height: 100%;
         `;
         document.getElementById("nav-tools").addEventListener("click", () => {
             const tools = document.querySelector("ca-tools");
