@@ -3,23 +3,24 @@ import { BinaryCell } from "../model/cellConstants.js";
 
 export default class CaGraphics {
     #mesh; // combined mesh of all cells
+    #geometry;
+    #material;
 
     #cellTransform;
 
     #maxDims;
     #dims;
 
-    constructor(maxDims) {
-        this.#maxDims = maxDims;
-        this.#dims = maxDims;
+    constructor(config) {
+        this.#maxDims = config.dims;
+        this.#dims = this.#maxDims;
 
         // cell graphics
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshLambertMaterial({ color: 0x00bbaa, emissive: 0x0000aa});
+        this.#geometry = new THREE.BoxGeometry();
+        this.#material = new THREE.MeshLambertMaterial({ color: 0x00bbaa, emissive: 0x0000aa});
 
-        // instancing
         const numCubes = this.#maxDims.x * this.#maxDims.y * this.#maxDims.z;
-        this.#mesh = new THREE.InstancedMesh(geometry, material, numCubes);
+        this.#mesh = new THREE.InstancedMesh(this.#geometry, this.#material, numCubes);
 
         this.#cellTransform = new THREE.Matrix4();
     }
@@ -70,5 +71,24 @@ export default class CaGraphics {
         }
         this.#mesh.instanceMatrix.needsUpdate = true;
         this.#mesh.count = i;
+    }
+
+    configureMesh(config, scene) {
+        // re-create mesh if the total number of instances is too low
+        if (scene && this.#shouldScaleCapacity(config)) {
+            scene.remove(this.#mesh);
+            this.#mesh?.dispose();
+            const dims = config.dims;
+            const numCubes = dims.x * dims.y * dims.z;
+            this.#mesh = new THREE.InstancedMesh(this.#geometry, this.#material, numCubes);
+            scene.add(this.#mesh);
+        }
+        this.#maxDims = config.dims;
+    }
+
+    #shouldScaleCapacity(config) {
+        const numCubes = this.#maxDims.x * this.#maxDims.y * this.#maxDims.z;
+        const numCubesNext = config.dims.x * config.dims.y * config.dims.z;
+        return numCubes < numCubesNext;
     }
 }

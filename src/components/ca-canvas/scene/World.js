@@ -24,16 +24,10 @@ export default class World {
         resizeObserver.observe(this.#container);
     }
 
-    init() {
+    init(config) {
         const style = getComputedStyle(this.#container);
         const width = parseInt(style.width);
         const height = parseInt(style.height);
-
-        const maxDims = {
-            x: parseInt(this.#container.getAttribute("max-x")),
-            y: parseInt(this.#container.getAttribute("max-y")),
-            z: parseInt(this.#container.getAttribute("max-z"))
-        };
 
         // essentials
         this.#scene = new THREE.Scene();
@@ -48,12 +42,13 @@ export default class World {
         this.#scene.add(this.#spotLight);
 
         // CA
-        this.#caGraphics = new CaGraphics(maxDims);
+        this.#caGraphics = new CaGraphics(config);
         this.#scene.add(this.#caGraphics.getMesh());
 
         // camera
         this.#orbitControls = new OrbitControls(this.#camera, this.#renderer.domElement);
-        this.#camera.position.set(maxDims.x, maxDims.y, maxDims.z);
+        const dims = config.dims;
+        this.#camera.position.set(dims.x, dims.y, dims.z);
         this.#orbitControls.update();
 
         // initial render
@@ -81,5 +76,9 @@ export default class World {
         this.#camera.aspect = width / height;
         this.#camera.updateProjectionMatrix();
         this.#renderer.setSize(width, height);
+    }
+
+    configure(config) {
+        this.#caGraphics.configureMesh(config, this.#scene);
     }
 }
