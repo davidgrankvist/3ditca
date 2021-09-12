@@ -3,7 +3,14 @@ class CaParamForm extends HTMLElement {
         this.innerHTML = `
             <form>
                 <div class="field">
-                    <label class="label">Dimensions</label>
+                    <label class="label">
+                        <span class="icon-text">
+                            <span class="icon">
+                                <i class="fa fa-globe"></i>
+                            </span>
+                            <span>World size</span>
+                        </span>
+                    </label>
                 </div>
                 <div class="field has-addons">
                     <div class="control">
@@ -17,13 +24,26 @@ class CaParamForm extends HTMLElement {
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">Initialize random</label>
+                    <label class="label">
+                        <span class="icon-text">
+                            <span class="icon">
+                                <i class="fa fa-cubes"></i>
+                            </span>
+                            <span>Initial activity</span>
+                    </label>
                     <div class="control">
                         <input class="input" type="number" value="0.5" step="0.01" min="0" max="1">
                     </div>
                 </div>
-                <div class="label">
-                    <label class="label">Survive limits</label>
+                <div class="field">
+                    <div class="label">
+                        <span icon-text">
+                            <span class="icon">
+                                <i class="fa fa-cube"></i>
+                            </span>
+                            <span>Stay active</span>
+                        </span>
+                    </div>
                 </div>
                 <div class="field has-addons">
                     <div class="control">
@@ -34,7 +54,14 @@ class CaParamForm extends HTMLElement {
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">Revive limits</label>
+                    <label class="label">
+                        <span icon-text">
+                            <span class="icon">
+                                <i class="fa fa-recycle"></i>
+                            </span>
+                            <span>Become active</span>
+                        </span>
+                    </label>
                 </div>
                 <div class="field has-addons">
                     <div class="control">
