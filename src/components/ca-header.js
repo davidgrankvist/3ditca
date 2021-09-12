@@ -8,22 +8,18 @@ class CaHeader extends HTMLElement {
 
     connectedCallback() {
         this.innerHTML = `
-            <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+            <nav class="navbar is-fixed-top is-light" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
-                    <div class="navbar-item">
-                        <a id="nav-tools">
-                            <span class="icon">
-                                <i class="fas fa-cog"></i>
-                            </span>
-                        </a>
-                    </div>
-                    <div class="navbar-item">
-                        <a id="nav-play-btn">
-                            <span class="icon">
-                                <i id="nav-play-icon" class="fas fa-play"></i>
-                            </span>
-                        </a>
-                    </div>
+                    <a id="nav-tools" class="navbar-item">
+                        <span class="icon">
+                            <i class="fas fa-cog"></i>
+                        </span>
+                    </a>
+                    <a id="nav-play-btn" class="navbar-item">
+                        <span class="icon">
+                            <i id="nav-play-icon" class="fas fa-play"></i>
+                        </span>
+                    </a>
                 </div>
             </nav>
         `;
