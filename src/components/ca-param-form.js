@@ -12,15 +12,15 @@ class CaParamForm extends HTMLElement {
                         </span>
                     </label>
                 </div>
-                <div class="field has-addons">
-                    <div class="control">
-                        <input class="input" type="number" value="50">
+                <div class="field is-grouped" style="max-width: 100%">
+                    <div class="control" style="max-width: 30%;">
+                        <input class="input" type="number" value="50" min="0">
                     </div>
-                    <div class="control">
-                        <input class="input" type="number" value="50">
+                    <div class="control" style="max-width: 30%;">
+                        <input class="input" type="number" value="50" min="0">
                     </div>
-                    <div class="control">
-                        <input class="input" type="number" value="50">
+                    <div class="control" style="max-width: 30%;">
+                        <input class="input" type="number" value="50" min="0">
                     </div>
                 </div>
                 <div class="field">
@@ -45,7 +45,7 @@ class CaParamForm extends HTMLElement {
                         </span>
                     </div>
                 </div>
-                <div class="field has-addons">
+                <div class="field is-grouped">
                     <div class="control">
                         <input class="input" type="number" value="3" min="0" max="26">
                     </div>
@@ -63,7 +63,7 @@ class CaParamForm extends HTMLElement {
                         </span>
                     </label>
                 </div>
-                <div class="field has-addons">
+                <div class="field is-grouped">
                     <div class="control">
                         <input class="input" type="number" value="26" min="0" max="26" >
                     </div>
