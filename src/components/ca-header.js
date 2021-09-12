@@ -11,14 +11,14 @@ class CaHeader extends HTMLElement {
             <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
                     <div class="navbar-item">
-                        <a id="nav-tools" class="button>
+                        <a id="nav-tools">
                             <span class="icon">
                                 <i class="fas fa-cog"></i>
                             </span>
                         </a>
                     </div>
                     <div class="navbar-item">
-                        <a id="nav-play-btn" class="button>
+                        <a id="nav-play-btn">
                             <span class="icon">
                                 <i id="nav-play-icon" class="fas fa-play"></i>
                             </span>
