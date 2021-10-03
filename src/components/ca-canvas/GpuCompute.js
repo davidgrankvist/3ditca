@@ -1,26 +1,47 @@
 import * as THREE from "three";
 
-// TODO: implement some computation here
 const defaultFragmentShader = `
-uniform sampler2D u_texture;
+uniform sampler2D data;
 void main() {
     vec2 uv = gl_FragCoord.xy / resolution.xy;
-    gl_FragColor = texture(u_texture, uv);
+    gl_FragColor = texture(data, uv);
 }
 `;
 
+const initRenderTarget = (textureSize) =>
+    new THREE.WebGLRenderTarget(
+        textureSize,
+        1,
+        {
+            format: THREE.RGBAFormat,
+            type: THREE.FloatType,
+            wrapS: THREE.ClampToEdgeWrapping,
+            wrapT: THREE.ClampToEdgeWrapping,
+            minFilter: THREE.NearestFilter,
+            magFilter: THREE.NearestFilter,
+            stencilBuffer: false,
+        }
+    );
+
 export default class GpuCompute {
     #inputUniforms;
-    #outputRenderTarget;
+    // alter render targets to prevent having the same input and output texture
+    #prevRenderTarget;
+    #nextRenderTarget;
 
     // needed for rendering
     #renderer;
     #scene;
     #camera;
 
-    constructor(renderer, textureSize, computeFragmentShader = defaultFragmentShader) {
+    constructor(renderer, data = null, computeFragmentShader = defaultFragmentShader) {
+        const textureSize = data.length / 4;
+        if (!data) {
+            const defaultData = new Array(textureSize * 4).fill(0); // 4 for RGBA
+            data = defaultData;
+        }
         // shader input is passed as a texture via a uniform
-        const rgbaData = new Float32Array(textureSize * 4); // 4 for RGBA
+        const rgbaData = new Float32Array(data);
         const dataTexture = new THREE.DataTexture(
             rgbaData,
             textureSize,
@@ -30,23 +51,12 @@ export default class GpuCompute {
         );
         dataTexture.needsUpdate = true;
         this.#inputUniforms = {
-            texture: { value: dataTexture }
+            data: { value: dataTexture }
         };
 
         // shader output is collected from the texture of a render target
-        this.#outputRenderTarget = new THREE.WebGLRenderTarget(
-            textureSize,
-            1,
-            {
-                format: THREE.RGBAFormat,
-                type: THREE.FloatType,
-                wrapS: THREE.ClampToEdgeWrapping,
-                wrapT: THREE.ClampToEdgeWrapping,
-                minFilter: THREE.NearestFilter,
-                magFilter: THREE.NearestFilter,
-                stencilBuffer: false,
-            }
-        );
+        this.#prevRenderTarget = initRenderTarget(textureSize);
+        this.#nextRenderTarget = initRenderTarget(textureSize);
 
         // material that defines shaders and uniforms
         const shaderMaterial = new THREE.ShaderMaterial({
@@ -73,15 +83,26 @@ export default class GpuCompute {
         this.#scene.add(mesh);
     }
 
+    getInputTexture() {
+        return this.#inputUniforms.data.value;
+    }
+
+
     setInputTexture(texture) {
-        this.#inputUniforms.texture.value = texture;
+        this.#inputUniforms.data.value = texture;
     }
 
     compute() {
-        this.#renderer.render(this.#scene, this.#camera, this.#outputRenderTarget);
+        this.#renderer.setRenderTarget(this.#nextRenderTarget);
+        this.#renderer.render(this.#scene, this.#camera);
+        this.#renderer.setRenderTarget(null);
+
+        const tmp = this.#prevRenderTarget;
+        this.#prevRenderTarget = this.#nextRenderTarget;
+        this.#nextRenderTarget = tmp;
     }
 
     getOutputTexture() {
-        return this.#outputRenderTarget.texture;
+        return this.#prevRenderTarget.texture;
     }
 }

@@ -7,7 +7,7 @@ export default class World {
 
     #scene;
     #camera;
-    #renderer;
+    renderer;
     #orbitControls;
     #spotLight;
 
@@ -32,9 +32,9 @@ export default class World {
         // essentials
         this.#scene = new THREE.Scene();
         this.#camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-        this.#renderer = new THREE.WebGLRenderer();
-        this.#renderer.setSize(width, height);
-        this.#container.appendChild(this.#renderer.domElement);
+        this.renderer = new THREE.WebGLRenderer();
+        this.renderer.setSize(width, height);
+        this.#container.appendChild(this.renderer.domElement);
 
         // light source
         this.#spotLight = new THREE.SpotLight(0xffffff);
@@ -42,17 +42,17 @@ export default class World {
         this.#scene.add(this.#spotLight);
 
         // CA
-        this.#caGraphics = new CaGraphics(config);
+        this.#caGraphics = new CaGraphics(config, this.renderer);
         this.#scene.add(this.#caGraphics.getMesh());
 
         // camera
-        this.#orbitControls = new OrbitControls(this.#camera, this.#renderer.domElement);
+        this.#orbitControls = new OrbitControls(this.#camera, this.renderer.domElement);
         const dims = config.dims;
         this.#camera.position.set(dims.x, dims.y, dims.z);
         this.#orbitControls.update();
 
         // initial render
-        this.#renderer.render(this.#scene, this.#camera);
+        this.renderer.render(this.#scene, this.#camera);
     }
 
     // subscription
@@ -62,7 +62,7 @@ export default class World {
 
     render() {
         this.#orbitControls.update();
-        this.#renderer.render(this.#scene, this.#camera);
+        this.renderer.render(this.#scene, this.#camera);
     }
 
     setCameraPosition(x, y, z) {
@@ -70,12 +70,12 @@ export default class World {
     }
 
     resize(width, height) {
-        if(!this.#renderer) {
+        if(!this.renderer) {
             return;
         }
         this.#camera.aspect = width / height;
         this.#camera.updateProjectionMatrix();
-        this.#renderer.setSize(width, height);
+        this.renderer.setSize(width, height);
     }
 
     configure(config) {

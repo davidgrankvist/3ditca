@@ -1,7 +1,8 @@
-import { initCa } from "../model/init.js";
+// import { initCa } from "../model/init.js";
 import World from "../scene/World.js";
 import RenderLoop from "./RenderLoop.js";
 import Publisher from "./Publisher.js";
+import CaState from "../model/CaState.js";
 
 export default class CaController {
     #world;
@@ -40,7 +41,12 @@ export default class CaController {
         this.#world.configure(config);
 
         // CA state
-        const caState = initCa(config);
+        // const caState = initCa(config);
+        const caState = new CaState(
+            {x: 6, y: 7, z: 8},
+            () => Math.random() > 0.5 ? 1 : 0,
+            this.#world.renderer
+        );
         this.#publisher = new Publisher(caState);
         this.#publisher.addSubscriber(this.#world);
 
