@@ -34,12 +34,8 @@ export default class GpuCompute {
     #scene;
     #camera;
 
-    constructor(renderer, data = null, computeFragmentShader = defaultFragmentShader, uniforms = {}) {
+    constructor(renderer, data, computeFragmentShader = defaultFragmentShader, uniforms = {}) {
         const textureSize = data.length / 4;
-        if (!data) {
-            const defaultData = new Array(textureSize * 4).fill(0); // 4 for RGBA
-            data = defaultData;
-        }
         // shader input is passed as a texture via a uniform
         const rgbaData = new Float32Array(data);
         const dataTexture = new THREE.DataTexture(
