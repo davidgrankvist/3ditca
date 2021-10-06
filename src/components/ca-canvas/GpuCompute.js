@@ -34,7 +34,7 @@ export default class GpuCompute {
     #scene;
     #camera;
 
-    constructor(renderer, data = null, computeFragmentShader = defaultFragmentShader) {
+    constructor(renderer, data = null, computeFragmentShader = defaultFragmentShader, uniforms = {}) {
         const textureSize = data.length / 4;
         if (!data) {
             const defaultData = new Array(textureSize * 4).fill(0); // 4 for RGBA
@@ -51,7 +51,8 @@ export default class GpuCompute {
         );
         dataTexture.needsUpdate = true;
         this.#inputUniforms = {
-            data: { value: dataTexture }
+            data: { value: dataTexture },
+            ...uniforms
         };
 
         // shader output is collected from the texture of a render target

@@ -7,13 +7,23 @@ export default class CaState {
     #dimensions;
     #hasComputed = false;
 
-    constructor(dims, initFunction, renderer) {
+    constructor(config, initFunction, renderer) {
+        const dims = config.dims;
         this.#dimensions = dims;
+        const survLims = config.transition.args.surviveLimits;
+        const revLims = config.transition.args.reviveLimits;
 
         const size = dims.x * dims.y * dims.z;
         const data = new Array(size * 4) // 4 for rgba
             .fill(null).map(x => initFunction(x));
-        this.#gpuCompute = new GpuCompute(renderer, data, ggolTransitionShader);
+        const uniforms = {
+            dims: { value: new Float32Array([dims.x, dims.y, dims.z, 1.0]) },
+            lims: { value: new Float32Array(
+                [survLims.min, survLims.max, revLims.min, revLims.max]
+            ) }
+        };
+
+        this.#gpuCompute = new GpuCompute(renderer, data, ggolTransitionShader, uniforms);
     }
 
     update() {

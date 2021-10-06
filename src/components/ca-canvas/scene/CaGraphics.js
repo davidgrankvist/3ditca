@@ -8,20 +8,23 @@ export default class CaGraphics {
     #maxDims;
     #dims;
 
-    #dataTextureUniform;
+    #uniforms;
 
     constructor(config) {
-        this.#maxDims = { x: 6, y: 7, z: 8 };//config.dims;
-        this.#dataTextureUniform = {
-            data: { value: null }
+        const dims = config.dims;
+        this.#maxDims = dims;
+        this.#uniforms = {
+            data: { value: null },
+            dims: { value: new Float32Array([dims.x, dims.y, dims.z, 1.0]) },
         };
 
         this.#geometry = new THREE.BoxGeometry();
         this.#material = new THREE.ShaderMaterial({
-            uniforms: this.#dataTextureUniform,
-            // TODO: read xm, ym, zm from uniform
+            uniforms: this.#uniforms,
             vertexShader: `
                 uniform sampler2D data;
+                uniform vec4 dims;
+
                 void main() {
                     /*
                      * here's the idea:
@@ -32,9 +35,9 @@ export default class CaGraphics {
                      * also, a mod b = a - (b * floor(a / b))
                      */
 
-                    float xm = 6.0;
-                    float ym = 7.0;
-                    float zm = 8.0;
+                    float xm = dims.x;
+                    float ym = dims.y;
+                    float zm = dims.z;
                     float size = xm * ym * zm;
                     float id = float(gl_InstanceID);
                     vec4 newPos = vec4(position, 1.0); //origin
@@ -74,7 +77,7 @@ export default class CaGraphics {
 
     // subscription
     update(caState) {
-        this.#dataTextureUniform.data.value = caState.getState();
+        this.#uniforms.data.value = caState.getState();
     }
 
     configureMesh(config, scene) {

@@ -1,15 +1,12 @@
-/*
- * TODO:
- *  - read xm, ym, zm from uniform
- *  - handle floating point precision errors
- */
 export const ggolTransitionShader = `
 uniform sampler2D data;
+uniform vec4 dims;
+uniform vec4 lims;
 
 float get_cell_state(float x, float y, float z) {
-    float xm = 6.0;
-    float ym = 7.0;
-    float zm = 8.0;
+    float xm = dims.x;
+    float ym = dims.y;
+    float zm = dims.z;
 
     if (x > xm || y > ym || z > zm) {
         return 0.0;
@@ -23,9 +20,9 @@ float get_cell_state(float x, float y, float z) {
 
 // index corresponds to an iteration in a for z, y, x nested loop
 vec3 get_position(float index) {
-    float xm = 6.0;
-    float ym = 7.0;
-    float zm = 8.0;
+    float xm = dims.x;
+    float ym = dims.y;
+    float zm = dims.z;
 
     // x = id mod xm
     float x = index - (xm * floor(index / xm));
@@ -55,13 +52,13 @@ float count_neighbors(float x, float y, float z) {
 }
 
 void main() {
-    float xm = 6.0;
-    float ym = 7.0;
-    float zm = 8.0;
-    float survive_min = 3.0;
-    float survive_max = 9.0;
-    float revive_min = 26.0;
-    float revive_max = 26.0;
+    float xm = dims.x;
+    float ym = dims.y;
+    float zm = dims.z;
+    float survive_min = lims.x;
+    float survive_max = lims.y;
+    float revive_min = lims.z;
+    float revive_max = lims.w;
     float size = resolution.x;
     float index = gl_FragCoord.x;
 

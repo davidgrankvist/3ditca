@@ -41,10 +41,9 @@ export default class CaController {
         this.#world.configure(config);
 
         // CA state
-        // const caState = initCa(config);
         const caState = new CaState(
-            {x: 6, y: 7, z: 8},
-            () => Math.random() > 0.5 ? 1 : 0,
+            config,
+            () => Math.random() > config.initCell.args.r ? 1 : 0,
             this.#world.renderer
         );
         this.#publisher = new Publisher(caState);
