@@ -12,8 +12,20 @@ float get_cell_state(float x, float y, float z) {
         return 0.0;
     }
 
+    // index in one dimensional array
     float index = z * (ym * xm + xm) + y * xm + x;
-    vec4 cell_state = texture(data, vec2(index / resolution.x));
+    // corresponding texel position that wraps the 1D array
+    vec2 tp;
+    if (index <= resolution.x) {
+        tp.x = index;
+        tp.y = 1.0;
+    } else {
+        // index mod res x
+        tp.x = index - (resolution.x * floor( index / resolution.x));
+        tp.y = ceil(index / resolution.x);
+    }
+
+    vec4 cell_state = texture(data, tp / resolution.xy);
     float cell_state_f = cell_state.r;
     return cell_state_f;
 }

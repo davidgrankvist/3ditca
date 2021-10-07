@@ -10,12 +10,24 @@ export default class CaGraphics {
 
     #uniforms;
 
-    constructor(config) {
+    constructor(config, renderer) {
         const dims = config.dims;
         this.#maxDims = dims;
+
+        const size = dims.x * dims.y * dims.z;
+        const gl = renderer.getContext();
+        const resCap = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+        let res;
+        if (size <= resCap) {
+            res = { x: size, y: 1 };
+        } else {
+            res = { x: resCap, y: Math.ceil(size / resCap) };
+        }
+
         this.#uniforms = {
             data: { value: null },
             dims: { value: new Float32Array([dims.x, dims.y, dims.z, 1.0]) },
+            res: { value: new Float32Array([res.x, res.y]) }
         };
 
         this.#geometry = new THREE.BoxGeometry();
@@ -24,6 +36,7 @@ export default class CaGraphics {
             vertexShader: `
                 uniform sampler2D data;
                 uniform vec4 dims;
+                uniform vec2 res;
 
                 void main() {
                     /*
@@ -42,7 +55,21 @@ export default class CaGraphics {
                     float id = float(gl_InstanceID);
                     vec4 newPos = vec4(position, 1.0); //origin
 
-                    vec4 cell_state = texture2D(data, vec2(id / size, 0.0));
+                    // index in one dimensional array
+                    float index = id;
+                    vec2 resolution = res;
+                    // corresponding texel position that wraps the 1D array
+                    vec2 tp;
+                    if (index <= resolution.x) {
+                        tp.x = index;
+                        tp.y = 1.0;
+                    } else {
+                        // index mod res x
+                        tp.x = index - (resolution.x * floor( index / resolution.x));
+                        tp.y = ceil(index / resolution.x);
+                    }
+
+                    vec4 cell_state = texture(data, tp / resolution.xy);
                     float cell_state_f = cell_state.r;
 
                     // x = id mod xm

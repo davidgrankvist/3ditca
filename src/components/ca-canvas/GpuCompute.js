@@ -8,10 +8,10 @@ void main() {
 }
 `;
 
-const initRenderTarget = (textureSize) =>
+const initRenderTarget = (res) =>
     new THREE.WebGLRenderTarget(
-        textureSize,
-        1,
+        res.x,
+        res.y,
         {
             format: THREE.RGBAFormat,
             type: THREE.FloatType,
@@ -34,14 +34,13 @@ export default class GpuCompute {
     #scene;
     #camera;
 
-    constructor(renderer, data, computeFragmentShader = defaultFragmentShader, uniforms = {}) {
-        const textureSize = data.length / 4;
+    constructor(renderer, data, res, computeFragmentShader = defaultFragmentShader, uniforms = {}) {
         // shader input is passed as a texture via a uniform
         const rgbaData = new Float32Array(data);
         const dataTexture = new THREE.DataTexture(
             rgbaData,
-            textureSize,
-            1,
+            res.x,
+            res.y,
             THREE.RGBAFormat,
             THREE.FloatType
         );
@@ -52,8 +51,8 @@ export default class GpuCompute {
         };
 
         // shader output is collected from the texture of a render target
-        this.#prevRenderTarget = initRenderTarget(textureSize);
-        this.#nextRenderTarget = initRenderTarget(textureSize);
+        this.#prevRenderTarget = initRenderTarget(res);
+        this.#nextRenderTarget = initRenderTarget(res);
 
         // material that defines shaders and uniforms
         const shaderMaterial = new THREE.ShaderMaterial({
@@ -66,7 +65,7 @@ export default class GpuCompute {
             `,
             fragmentShader: computeFragmentShader
         });
-        shaderMaterial.defines.resolution = `vec2(${textureSize}, 1)`;
+        shaderMaterial.defines.resolution = `vec2(${res.x}, ${res.y})`;
 
         // other objects that are required for rendering
         this.#renderer = renderer;

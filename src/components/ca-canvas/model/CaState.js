@@ -14,8 +14,19 @@ export default class CaState {
         const revLims = config.transition.args.reviveLimits;
 
         const size = dims.x * dims.y * dims.z;
-        const data = new Array(size * 4) // 4 for rgba
+
+        const gl = renderer.getContext();
+        const resCap = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+        let res;
+        if (size <= resCap) {
+            res = { x: size, y: 1 };
+        } else {
+            res = { x: resCap, y: Math.ceil(size / resCap) };
+        }
+        const textureSize = res.x * res.y;
+        const data = new Array(textureSize * 4) // 4 for rgba
             .fill(null).map(x => initFunction(x));
+
         const uniforms = {
             dims: { value: new Float32Array([dims.x, dims.y, dims.z, 1.0]) },
             lims: { value: new Float32Array(
@@ -23,7 +34,7 @@ export default class CaState {
             ) }
         };
 
-        this.#gpuCompute = new GpuCompute(renderer, data, ggolTransitionShader, uniforms);
+        this.#gpuCompute = new GpuCompute(renderer, data, res, ggolTransitionShader, uniforms);
     }
 
     update() {
