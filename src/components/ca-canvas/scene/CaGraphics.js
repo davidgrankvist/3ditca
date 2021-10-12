@@ -37,6 +37,7 @@ export default class CaGraphics {
                 uniform sampler2D data;
                 uniform vec4 dims;
                 uniform vec2 res;
+                varying vec4 v_color;
 
                 void main() {
                     /*
@@ -86,11 +87,14 @@ export default class CaGraphics {
                     newPos.z *= cell_state_f;
 
                     gl_Position = projectionMatrix * modelViewMatrix * newPos;
+                    v_color = vec4((newPos.x + 1.0) / (xm + 1.0), (newPos.y + 1.0) / (ym + 1.0), (newPos.z + 1.0) / (zm + 1.0), 1.0);
+
                 }
             `,
             fragmentShader: `
+                varying vec4 v_color;
                 void main() {
-                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                    gl_FragColor = v_color;
                 }
             `
         });
