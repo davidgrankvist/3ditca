@@ -1,7 +1,37 @@
 export const ggolTransitionShader = `
+/*
+ * 1D data that continues on the next row if needed.
+ * Each index corresponds to an iteration in a for z, y, x nested loop.
+ */
 uniform sampler2D data;
 uniform vec4 dims;
 uniform vec4 lims;
+
+// convert current fragment coordinate to data texture position
+vec3 get_current_position() {
+    float xm = dims.x;
+    float ym = dims.y;
+    float zm = dims.z;
+
+    // FIXME
+    // subtract 0.5 because fragments uses half-pixel centers
+    float index_x = gl_FragCoord.x - 0.5;
+    float frag_y = gl_FragCoord.y - 0.5;
+    // invert y-index because fragment origin is bottom left
+    float index_y = resolution.y - frag_y - 1.0;
+    // compute 1D array index
+    float index = (index_y - 1.0) * resolution.x + index_x;
+
+    // x = id mod xm
+    float x = index - (xm * floor(index / xm));
+    // y = (index / xm) mod ym
+    float y = floor(index / xm) - (ym * floor(floor(index / xm) / ym));
+    // z = (id / ((xm + 1)(ym + 1))) mod zm
+    float a = floor(index / ((xm + 1.0) * (ym + 1.0)));
+    float z = a - (zm * floor(a / zm));
+
+    return vec3(x, y, z);
+}
 
 float get_cell_state(float x, float y, float z) {
     float xm = dims.x;
@@ -30,23 +60,6 @@ float get_cell_state(float x, float y, float z) {
     return cell_state_f;
 }
 
-// index corresponds to an iteration in a for z, y, x nested loop
-vec3 get_position(float index) {
-    float xm = dims.x;
-    float ym = dims.y;
-    float zm = dims.z;
-
-    // x = id mod xm
-    float x = index - (xm * floor(index / xm));
-    // y = (index / xm) mod ym
-    float y = floor(index / xm) - (ym * floor(floor(index / xm) / ym));
-    // z = (id / ((xm + 1)(ym + 1))) mod zm
-    float a = floor(index / ((xm + 1.0) * (ym + 1.0)));
-    float z = a - (zm * floor(a / zm));
-
-    return vec3(x, y, z);
-}
-
 float count_neighbors(float x, float y, float z) {
     float sum = 0.0;
     for(float dx = -1.0; dx <= 1.0; dx++) {
@@ -63,17 +76,12 @@ float count_neighbors(float x, float y, float z) {
 }
 
 void main() {
-    float xm = dims.x;
-    float ym = dims.y;
-    float zm = dims.z;
     float survive_min = lims.x;
     float survive_max = lims.y;
     float revive_min = lims.z;
     float revive_max = lims.w;
-    float size = resolution.x;
-    float index = gl_FragCoord.x;
 
-    vec3 pos = get_position(index);
+    vec3 pos = get_current_position();
     float count = count_neighbors(pos.x, pos.y, pos.z);
     float cell_state_f = get_cell_state(pos.x, pos.y, pos.z);
 
