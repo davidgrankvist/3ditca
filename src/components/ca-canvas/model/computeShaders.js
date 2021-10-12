@@ -49,7 +49,6 @@ vec3 get_position(float index) {
 
 float count_neighbors(float x, float y, float z) {
     float sum = 0.0;
-    sum += get_cell_state(x - 1.0, y, z);
     for(float dx = -1.0; dx <= 1.0; dx++) {
         for(float dy = -1.0; dy <= 1.0; dy++) {
             for(float dz = -1.0; dz <= 1.0; dz++) {
