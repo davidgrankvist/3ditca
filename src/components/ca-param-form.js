@@ -1,5 +1,6 @@
 class CaParamForm extends HTMLElement {
     connectedCallback() {
+        const dims = { x: 20, y: 20, z: 20 };
         this.innerHTML = `
             <form>
                 <div class="field">
@@ -14,13 +15,13 @@ class CaParamForm extends HTMLElement {
                 </div>
                 <div class="field is-grouped" style="max-width: 100%">
                     <div class="control" style="max-width: 30%;">
-                        <input class="input" type="number" value="50" min="0">
+                        <input class="input" type="number" value="${dims.x}" min="0">
                     </div>
                     <div class="control" style="max-width: 30%;">
-                        <input class="input" type="number" value="50" min="0">
+                        <input class="input" type="number" value="${dims.y}" min="0">
                     </div>
                     <div class="control" style="max-width: 30%;">
-                        <input class="input" type="number" value="50" min="0">
+                        <input class="input" type="number" value="${dims.z}" min="0">
                     </div>
                 </div>
                 <div class="field">

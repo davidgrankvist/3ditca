@@ -95,6 +95,12 @@ void main() {
     if (count >= lim_min && count <= lim_max) {
         next_cell_state = 1.0;
     }
+    // TODO temporary projection into plane for debugging
+    if (pos.x < 0.5) {
+        next_cell_state = 1.0;
+    } else {
+        next_cell_state = 0.0;
+    }
 
     gl_FragColor = vec4(next_cell_state, 0.0, 0.0, 1.0);
 }
