@@ -1,40 +1,46 @@
-import { init3dArr }from "../arrayUtils.js";
+import GPU from "gpu.js";
+import { ggolTransitionGgpu } from "./transitions.js";
 
 export default class CaState {
     #grid; // cell states 3D vector
-    #transition; // (x, y, z, this) => next cell state
     #dimensions; // convenience object for grid dimensions
 
-    constructor(grid, transition) {
+    // dims, revive limits and survive limits as shader-friendly arrays
+    #dimsArr;
+    #slimsArr;
+    #rlimsArr;
+
+    // ggpu objects
+    #gpuCompute;
+    #kernel;
+
+    constructor(grid, slims, rlims) {
         this.#grid = grid;
-        this.#transition = transition;
+
+        // format exposed in getter
         this.#dimensions = {
-            x: this.#grid.length,
+            z: this.#grid.length,
             y: this.#grid[0].length,
-            z: this.#grid[0][0].length
+            x: this.#grid[0][0].length
         };
+
+        // arguments for compute shader
+        this.#dimsArr = [this.#dimensions.x, this.#dimensions.y, this.#dimensions.z];
+        this.#slimsArr = [slims.min, slims.max];
+        this.#rlimsArr = [rlims.min, rlims.max];
+
+        // compute shader
+        this.#gpuCompute = new GPU.GPU({ mode: "webgl2" });
+        this.#kernel = this.#gpuCompute.createKernel(ggolTransitionGgpu).setOutput(this.#dimensions);
     }
 
     update() {
-        const dims = this.getDimensions();
-        const nextGrid = init3dArr(dims);
-        let hasChanged = false;
-        for (let x = 0; x < dims.x; x++) {
-            for (let y = 0; y < dims.y; y++) {
-                for (let z = 0; z < dims.z; z++) {
-                    nextGrid[x][y][z] = this.#transition(x, y, z, this);
-                    if (nextGrid[x][y][z] !== this.getState(x, y, z)) {
-                        hasChanged = true;
-                    }
-                }
-            }
-        }
-        this.#grid = nextGrid;
-        return hasChanged;
+        this.#grid = this.#kernel(this.#grid, this.#dimsArr, this.#slimsArr, this.#rlimsArr);
+        return true;
     }
 
     getState(x, y, z) {
-        return this.#grid[x][y][z];
+        return this.#grid[z][y][x];
     }
 
     getDimensions() {

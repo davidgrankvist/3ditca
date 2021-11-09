@@ -43,7 +43,6 @@ export default class CaController {
         const caState = initCa(config);
         this.#publisher = new Publisher(caState);
         this.#publisher.addSubscriber(this.#world);
-
         // camera
         const dims = config.dims;
         this.#world.setCameraPosition(dims.x, dims.y, dims.z);
