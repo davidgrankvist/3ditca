@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "watch": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "build": "parcel build src/index.html --no-optimize"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "2.0.0-rc.0",
